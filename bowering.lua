@@ -1,6 +1,11 @@
---- crow script upload utility
--- takes a lua file as argument and sends it to crow 
--- can save to crow's internal flash with the optional 'flash' arg
+--- bowering
+-- run crow scripts from the
+-- bowery collection.
+--
+-- E1: select script
+-- K1: (hold) load script
+--
+-- more soon ^^
 
 -- UI settings
 local show_console = true -- displays messages from crow on-screen
