@@ -43,6 +43,25 @@ function draw.script_describe( script )
 end
 
 
+
+function draw.public_params( pub, sel )
+  local len = pub.get_count()
+  if len > 0 then
+    if len > 8 then len = 8 end -- limit length to viewable count
+    screen.font_face(1)
+    screen.font_size(8)
+    for i=1,len do
+      screen.level( (i==sel) and 15 or 5 ) -- selected is bright
+      local p = pub.get_index(i)
+      screen.move(48,(i+2)*8)
+      screen.text_right(p.name) -- text_right?
+      screen.move(64,(i+2)*8)
+      screen.text(p.val)
+    end
+  end
+end
+
+
 function draw.console(s)
   screen.move(0,62)
   screen.font_face(1)
