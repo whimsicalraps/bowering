@@ -14,7 +14,6 @@ local show_console = true -- displays messages from crow on-screen
 -- global state
 b = include('lib/boughs')
 draw = include('lib/draw')
-cp = include('lib/crowpublic')
 local bowerypath = norns.state.path .. "crow/"
 local scripts = {}
 local script_count = 0
@@ -35,11 +34,8 @@ function init()
     script_count = #scripts -- optimization
   end
   -- crow.receive = function(s) console = s; redraw() end -- capture plain crow responses to console
-  redraw()
-end
-
-
-function crow.public.ready()
+  function crow.public.ready() redraw() end
+  function crow.public.change() redraw() end
   redraw()
 end
 
