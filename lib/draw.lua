@@ -53,10 +53,29 @@ function draw.public_params( pub, sel )
     for i=1,len do
       screen.level( (i==sel) and 15 or 5 ) -- selected is bright
       local p = pub.get_index(i)
-      screen.move(48,(i+2)*8)
-      screen.text_right(p.name) -- text_right?
-      screen.move(64,(i+2)*8)
-      screen.text(p.val)
+      screen.move(40,(i+2)*8)
+      screen.text_right(p.name)
+      if p.type == 'slider' then
+        -- end caps
+        screen.line_width(1)
+        screen.level(1)
+        
+        screen.move(49,(i+1)*8 +3)
+        screen.line_rel(0,6)
+        screen.stroke()
+        screen.move(49+32,(i+1)*8 +3)
+        screen.line_rel(0,6)
+        screen.stroke()
+        -- location
+        local loc = 32*(p.val - p.min)/p.range
+        screen.move(49+loc,(i+1)*8 +3)
+        screen.level( (i==sel) and 15 or 5 )
+        screen.line_rel(0,6)
+        screen.stroke()
+      else
+        screen.move(48,(i+2)*8)
+        screen.text(p.val)
+      end
     end
   end
 end
