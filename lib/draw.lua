@@ -7,7 +7,7 @@ local draw = {}
 
 
 function draw.script_selection( scripts, selected, current )
-  screen.move(0,8)
+  screen.move(128,8)
   screen.font_face(1)
   screen.font_size(8)
   screen.level( (selected==current) and 15 or 5 )
@@ -16,7 +16,7 @@ function draw.script_selection( scripts, selected, current )
   if selected > 0 then -- not none
     name = string.sub( scripts[selected],1,-5 )
   end
-  screen.text(name)
+  screen.text_right(name)
 end
 
 
@@ -24,7 +24,7 @@ function draw.script_describe( script )
   local scriptpath = norns.state.path .. 'crow/' .. script
   if util.file_exists(scriptpath) then
     
-    screen.move(4,16)
+    screen.move(0,8)
     screen.font_face(1)
     screen.font_size(8)
     screen.level(3)
@@ -43,47 +43,75 @@ function draw.script_describe( script )
 end
 
 
-
+-- draw all the params
 function draw.public_params( pub, sel )
+  -- draw any kind of param
+  local function dparam(p, sel, yoff)
+    -- draw a slider
+    local function dslider(p, sel, xoff, yoff, width)
+      -- end caps
+      screen.line_width(1)
+      screen.level(1)
+      screen.move(xoff+1, yoff)
+      screen.line_rel(0,-5)
+      screen.stroke()
+      screen.move(xoff+1+width, yoff)
+      screen.line_rel(0,-5)
+      screen.stroke()
+      -- location
+      local loc = width*(p.val - p.min)/p.range
+      screen.move(xoff+1+loc, yoff)
+      screen.level( sel and 15 or 5 )
+      screen.line_rel(0,-5)
+      screen.stroke()
+    end
+    
+    -- draw a table (with selection)
+    local function dtable(p, sel, xoff, yoff)
+      local spacing = 10
+      -- draw step-select if index is non-zero
+      if p.val.index > 0 then
+      -- fill style
+        screen.level(1)
+        screen.rect(xoff-2 + (p.val.index-1)*spacing, yoff+1, 8, -7)
+        screen.fill()
+      -- underline style
+        -- screen.move(xoff + (p.val.index-1)*spacing, yoff + 3)
+        -- screen.level(15)
+        -- screen.line_rel(4,0)
+        -- screen.stroke()
+      end
+      -- draw table elements
+      for k,v in ipairs(p.val) do
+        screen.level( (sel and k==p.listix) and 15 or 5)
+        screen.move(xoff+2 + (k-1)*spacing, yoff)
+        screen.text_center(v)
+      end
+    end
+    
+  -- draw param name
+    screen.level( sel and 15 or 5 )
+    screen.move(36, yoff)
+    screen.text_right(p.name)
+    local xoff = 45
+  -- draw param valule
+    if p.type == 'slider' then
+      dslider(p, sel, xoff, yoff, 64)
+    elseif p.list then -- draw a list type
+      dtable(p, sel, xoff, yoff)
+    else -- draw number/string value
+      screen.move(xoff, yoff)
+      screen.text(p.val)
+    end
+  end
+  
   local len = pub.get_count()
   if len > 0 then
-    if len > 8 then len = 8 end -- limit length to viewable count
+    if len > 6 then len = 6 end -- limit length to viewable count
     screen.font_face(1)
     screen.font_size(8)
     for i=1,len do
-      screen.level( (i==sel) and 15 or 5 ) -- selected is bright
-      local p = pub.get_index(i)
-      screen.move(40,(i+2)*8)
-      screen.text_right(p.name)
-      if p.type == 'slider' then
-        -- end caps
-        screen.line_width(1)
-        screen.level(1)
-        
-        screen.move(49,(i+1)*8 +3)
-        screen.line_rel(0,6)
-        screen.stroke()
-        screen.move(49+32,(i+1)*8 +3)
-        screen.line_rel(0,6)
-        screen.stroke()
-        -- location
-        local loc = 32*(p.val - p.min)/p.range
-        screen.move(49+loc,(i+1)*8 +3)
-        screen.level( (i==sel) and 15 or 5 )
-        screen.line_rel(0,6)
-        screen.stroke()
-      elseif p.list then -- draw a list type
-        screen.move(48,(i+2)*8)
-        local s = "[" .. p.listix .. "] "
-        s = s .. "[" .. p.val.index .. "] "
-        for k,v in ipairs(p.val) do
-          s = s .. v .. " "
-        end
-        screen.text(s)
-      else
-        screen.move(48,(i+2)*8)
-        screen.text(p.val)
-      end
+      dparam(pub.get_index(i), i==sel, (i+1)*9 - 1)
     end
   end
 end
