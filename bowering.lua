@@ -22,6 +22,7 @@ local current_script = 0 -- none
 local show_description = false
 local selected_param = 0 -- none
 local console = ""
+local alt_param = false
 
 
 function init()
@@ -48,7 +49,9 @@ function key(n,z)
     current_script = selected_script
     redraw()
   end
+  if n==3 then alt_param = (z==1) and true or false end
 end
+
 
 
 function enc(n,z)
@@ -58,7 +61,7 @@ function enc(n,z)
   elseif n==2 then -- select param
     selected_param = util.wrap( selected_param + z, 1, crow.public.get_count() )
   elseif n==3 then -- set param
-    crow.public.delta(selected_param, z)
+    crow.public.delta(selected_param, z, alt_param)
   end
   redraw()
 end

@@ -72,6 +72,14 @@ function draw.public_params( pub, sel )
         screen.level( (i==sel) and 15 or 5 )
         screen.line_rel(0,6)
         screen.stroke()
+      elseif p.list then -- draw a list type
+        screen.move(48,(i+2)*8)
+        local s = "[" .. p.listix .. "] "
+        s = s .. "[" .. p.val.index .. "] "
+        for k,v in ipairs(p.val) do
+          s = s .. v .. " "
+        end
+        screen.text(s)
       else
         screen.move(48,(i+2)*8)
         screen.text(p.val)
