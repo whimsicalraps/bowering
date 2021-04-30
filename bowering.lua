@@ -35,8 +35,13 @@ function init()
     script_count = #scripts -- optimization
   end
   -- crow.receive = function(s) console = s; redraw() end -- capture plain crow responses to console
-  function crow.public.ready() redraw() end
   function crow.public.change() redraw() end
+  function crow.public.discovered()
+    print'discovered!'
+    crow.public.view.all() -- enable viewing of all CV levels
+    redraw()
+  end
+  print('disco',crow.public.discovered)
   redraw()
 end
 
@@ -44,8 +49,7 @@ end
 function key(n,z)
   if n==1 and z==1 then
     console = "" -- clear console
-    -- overloaded loadscript that discovers public params after load
-    crow.public.loadscript(scripts[selected_script]) -- searches crow/ subfolder, then dust/code/
+    crow.loadscript(scripts[selected_script]) -- searches crow/ subfolder, then dust/code/
     current_script = selected_script
     redraw()
   end
