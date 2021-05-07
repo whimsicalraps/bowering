@@ -81,6 +81,7 @@ function redraw()
     show_description = false -- only display once
   end
   draw.public_params( crow.public, selected_param )
+  draw.public_views( crow.public.viewing )
   if show_console then
     draw.console( console )
   end

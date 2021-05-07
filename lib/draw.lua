@@ -117,6 +117,27 @@ function draw.public_params( pub, sel )
 end
 
 
+-- draw viewable i/o
+function draw.public_views( vs )
+  local function vslide(x, val)
+    val = -val*3.6
+    if math.floor(val+0.5) == 0 then
+      screen.level(1)
+      screen.pixel(x-1, 43) -- pixel prints 1px to the right of line_rel
+      screen.fill()
+    else
+      screen.level(5)
+      screen.move(x, 44)
+      screen.line_rel(0, val)
+      screen.stroke()
+    end
+  end
+  screen.line_width(1)
+  for i=1,2 do if vs.input[i] ~= nil then vslide(1 + (i-1) * 4, vs.input[i]) end end
+  for i=1,4 do if vs.output[i] ~= nil then vslide(115 + (i-1) * 4, vs.output[i]) end end
+end
+
+
 function draw.console(s)
   screen.move(0,62)
   screen.font_face(1)
