@@ -12,9 +12,10 @@ local show_console = true -- displays messages from crow on-screen
 
 
 -- global state
-b = include('lib/boughs')
+boughs = include('lib/boughs')
 draw = include('lib/draw')
-local bowerypath = norns.state.path .. "crow/"
+
+local BOWERYPATH = norns.state.path .. "crow/"
 local scripts = {}
 local script_count = 0
 local selected_script = 0 -- none
@@ -26,12 +27,12 @@ local alt_param = false
 
 
 function init()
-  scripts = util.scandir(bowerypath)
+  scripts = util.scandir(BOWERYPATH)
   if #scripts == 0 then
     print 'bowery not found. git submodule update?'
     
   else
-    scripts = b.filter( b.is_luafile, scripts ) -- remove README etc
+    scripts = boughs.filter( boughs.is_luafile, scripts ) -- remove README etc
     script_count = #scripts -- optimization
   end
   -- crow.receive = function(s) console = s; redraw() end -- capture plain crow responses to console
@@ -41,7 +42,6 @@ function init()
     crow.public.view.all() -- enable viewing of all CV levels
     redraw()
   end
-  print('disco',crow.public.discovered)
   redraw()
 end
 
