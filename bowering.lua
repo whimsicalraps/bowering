@@ -24,6 +24,7 @@ local show_description = false
 local selected_param = 0 -- none
 local console = ""
 local alt_param = false
+local is_freeze = false
 
 
 function init()
@@ -49,8 +50,16 @@ end
 function key(n,z)
   if n==1 and z==1 then
     console = "" -- clear console
-    crow.loadscript(scripts[selected_script]) -- searches crow/ subfolder, then dust/code/
+    if is_freeze and selected_script == current_script then
+      crow.public.freezescript(scripts[selected_script])
+    else
+      crow.loadscript(scripts[selected_script])
+    end
     current_script = selected_script
+    redraw()
+  end
+  if n==2 then
+    is_freeze = (z==1) and true or false
     redraw()
   end
   if n==3 then alt_param = (z==1) and true or false end
@@ -75,7 +84,7 @@ function redraw()
   screen.clear()
   screen.line_width(1)
 
-  draw.script_selection( scripts, selected_script, current_script )
+  draw.script_selection( scripts, selected_script, current_script, is_freeze )
   if show_description then
     draw.script_describe( scripts[selected_script] )
     show_description = false -- only display once

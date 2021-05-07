@@ -6,7 +6,7 @@
 local draw = {}
 
 
-function draw.script_selection( scripts, selected, current )
+function draw.script_selection( scripts, selected, current, is_freeze )
   screen.move(128,8)
   screen.font_face(1)
   screen.font_size(8)
@@ -15,6 +15,9 @@ function draw.script_selection( scripts, selected, current )
   local name = "none"
   if selected > 0 then -- not none
     name = string.sub( scripts[selected],1,-5 )
+    if is_freeze and selected == current then
+      name = "FREEZE " .. name
+    end
   end
   screen.text_right(name)
 end
