@@ -50,16 +50,14 @@ end
 function draw.public_params( pub, sel )
   -- draw any kind of param
   local function dparam(p, sel, yoff)
+
     -- draw a slider
     local function dslider(p, sel, xoff, yoff, width)
-      -- end caps
+      -- range strikethrough
       screen.line_width(1)
       screen.level(1)
-      screen.move(xoff+1, yoff)
-      screen.line_rel(0,-5)
-      screen.stroke()
-      screen.move(xoff+1+width, yoff)
-      screen.line_rel(0,-5)
+      screen.move(xoff+1, yoff-2)
+      screen.line_rel(width,0)
       screen.stroke()
       -- location
       local loc = width*(p.val - p.min)/p.range
@@ -104,7 +102,11 @@ function draw.public_params( pub, sel )
       dtable(p, sel, xoff, yoff)
     else -- draw number/string value
       screen.move(xoff, yoff)
-      screen.text(p.val)
+      if type(p.val) == 'number' then
+        screen.text(string.format('%.4g',p.val))
+      else
+        screen.text(p.val)
+      end
     end
   end
   

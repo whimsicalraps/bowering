@@ -25,13 +25,13 @@ local selected_param = 0 -- none
 local console = ""
 local alt_param = false
 local is_freeze = false
+local viewall = false
 
 
 function init()
   scripts = util.scandir(BOWERYPATH)
   if #scripts == 0 then
-    print 'bowery not found. git submodule update?'
-    
+    print 'bowery not found. check install. git submodule init?'
   else
     scripts = boughs.filter( boughs.is_luafile, scripts ) -- remove README etc
     script_count = #scripts -- optimization
@@ -40,7 +40,7 @@ function init()
   function crow.public.change() redraw() end
   function crow.public.discovered()
     print'discovered!'
-    crow.public.view.all() -- enable viewing of all CV levels
+    if viewall then crow.public.view.all() end -- enable viewing of all CV levels
     redraw()
   end
   redraw()
