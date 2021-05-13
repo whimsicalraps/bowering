@@ -1,6 +1,6 @@
 --- draw
 -- functional display of UI elements
--- PLEASE no global data access here
+-- no global data access here
 -- the only stateful actions allowed are to 'screen'
 
 local draw = {}
@@ -71,7 +71,7 @@ function draw.public_params( pub, sel )
     local function dtable(p, sel, xoff, yoff)
       local spacing = 10
       -- draw step-select if index is non-zero
-      if p.val.index > 0 then
+      if p.val.index then
       -- fill style
         screen.level(1)
         screen.rect(xoff-2 + (p.val.index-1)*spacing, yoff+1, 8, -7)
@@ -95,7 +95,7 @@ function draw.public_params( pub, sel )
     screen.move(36, yoff)
     screen.text_right(p.name)
     local xoff = 45
-  -- draw param valule
+  -- draw param value
     if p.type == 'slider' then
       dslider(p, sel, xoff, yoff, 64)
     elseif p.list then -- draw a list type

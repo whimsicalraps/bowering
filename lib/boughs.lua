@@ -7,6 +7,7 @@ local b = {}
 -- return true for files with ".lua" extension
 function b.is_luafile( filename )
   local dot = string.find( string.reverse(filename), '%.')
+  if not dot then return false end -- subfolders are ignored
   local ext = string.sub( filename, 1-dot )
   return ext == 'lua'
 end
