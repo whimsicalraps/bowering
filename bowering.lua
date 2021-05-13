@@ -37,8 +37,8 @@ function init()
     script_count = #scripts -- optimization
   end
   -- crow.receive = function(s) console = s; redraw() end -- capture plain crow responses to console
-  function crow.public.change() redraw() end
-  function crow.public.discovered()
+  function norns.crow.public.change() redraw() end
+  function norns.crow.public.discovered()
     print'discovered!'
     if viewall then crow.public.view.all() end -- enable viewing of all CV levels
     redraw()
@@ -51,9 +51,9 @@ function key(n,z)
   if n==1 and z==1 then
     console = "" -- clear console
     if is_freeze and selected_script == current_script then
-      crow.public.freezescript(scripts[selected_script])
+      norns.crow.public.freezescript(scripts[selected_script])
     else
-      crow.loadscript(scripts[selected_script])
+      norns.crow.loadscript(scripts[selected_script])
     end
     current_script = selected_script
     redraw()
@@ -63,8 +63,8 @@ function key(n,z)
     redraw()
   end
   if n==3 then alt_param = (z==1) and true or false end
+  if is_freeze and alt_param and z==1 then crow.public.view.all() end
 end
-
 
 
 function enc(n,z)
@@ -72,9 +72,9 @@ function enc(n,z)
     selected_script = util.clamp(selected_script + z, 1, script_count)
     show_description = true
   elseif n==2 then -- select param
-    selected_param = util.wrap( selected_param + z, 1, crow.public.get_count() )
+    selected_param = util.wrap( selected_param + z, 1, norns.crow.public.get_count() )
   elseif n==3 then -- set param
-    crow.public.delta(selected_param, z, alt_param)
+    norns.crow.public.delta(selected_param, z, alt_param)
   end
   redraw()
 end
@@ -89,8 +89,8 @@ function redraw()
     draw.script_describe( scripts[selected_script] )
     show_description = false -- only display once
   end
-  draw.public_params( crow.public, selected_param )
-  draw.public_views( crow.public.viewing )
+  draw.public_params( norns.crow.public, selected_param )
+  draw.public_views( norns.crow.public.viewing )
   if show_console then
     draw.console( console )
   end
