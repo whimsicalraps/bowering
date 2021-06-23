@@ -20,12 +20,14 @@ local scripts = {}
 local script_count = 0
 local selected_script = 0 -- none
 local current_script = 0 -- none
-local show_description = false
+-- local show_description = false
 local selected_param = 0 -- none
 local console = ""
 local alt_param = false
 local is_freeze = false
 local viewall = false
+
+local P = norns.crow.public
 
 
 function init()
@@ -37,8 +39,8 @@ function init()
     script_count = #scripts -- optimization
   end
   -- crow.receive = function(s) console = s; redraw() end -- capture plain crow responses to console
-  function norns.crow.public.change() redraw() end
-  function norns.crow.public.discovered()
+  function P.change() redraw() end
+  function P.discovered()
     print'discovered!'
     if viewall then crow.public.view.all() end -- enable viewing of all CV levels
     redraw()
@@ -51,7 +53,7 @@ function key(n,z)
   if n==1 and z==1 then
     console = "" -- clear console
     if is_freeze and selected_script == current_script then
-      norns.crow.public.freezescript(scripts[selected_script])
+      P.freezescript(scripts[selected_script])
     else
       norns.crow.loadscript(scripts[selected_script])
     end
@@ -70,11 +72,11 @@ end
 function enc(n,z)
   if n==1 then -- select script
     selected_script = util.clamp(selected_script + z, 1, script_count)
-    show_description = true
+    -- show_description = true
   elseif n==2 then -- select param
-    selected_param = util.wrap( selected_param + z, 1, norns.crow.public.get_count() )
+    selected_param = util.wrap( selected_param + z, 1, P.get_count() )
   elseif n==3 then -- set param
-    norns.crow.public.delta(selected_param, z, alt_param)
+    P.delta(selected_param, z, alt_param)
   end
   redraw()
 end
@@ -85,12 +87,14 @@ function redraw()
   screen.line_width(1)
 
   draw.script_selection( scripts, selected_script, current_script, is_freeze )
-  if show_description then
-    draw.script_describe( scripts[selected_script] )
-    show_description = false -- only display once
-  end
-  draw.public_params( norns.crow.public, selected_param )
-  draw.public_views( norns.crow.public.viewing )
+  -- FIXME disabled script preview as it's unhelpful without a big overhaul
+  -- see: https://github.com/monome/norns/pull/1362#issuecomment-842592147
+  -- if show_description then
+  --   draw.script_describe( scripts[selected_script] )
+  --   show_description = false -- only display once
+  -- end
+  draw.public_params( P, selected_param )
+  draw.public_views( P.viewing )
   if show_console then
     draw.console( console )
   end
