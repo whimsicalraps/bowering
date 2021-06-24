@@ -1,4 +1,6 @@
 --- bowering
+-- v1 @trentgill
+--
 -- run crow scripts from the
 -- bowery collection.
 --
