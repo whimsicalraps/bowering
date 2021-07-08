@@ -53,14 +53,16 @@ end
 
 function key(n,z)
   if n==1 and z==1 then
-    console = "" -- clear console
-    if is_freeze and selected_script == current_script then
-      P.freezescript(scripts[selected_script])
-    else
-      norns.crow.loadscript(scripts[selected_script])
+    if selected_script > 0 then
+      console = "" -- clear console
+      if is_freeze and selected_script == current_script then
+        P.freezescript(scripts[selected_script])
+      else
+        norns.crow.loadscript(scripts[selected_script])
+      end
+      current_script = selected_script
+      redraw()
     end
-    current_script = selected_script
-    redraw()
   end
   if n==2 then
     is_freeze = (z==1) and true or false
@@ -76,9 +78,13 @@ function enc(n,z)
     selected_script = util.clamp(selected_script + z, 1, script_count)
     -- show_description = true
   elseif n==2 then -- select param
-    selected_param = util.wrap( selected_param + z, 1, P.get_count() )
+    if selected_script > 0 then
+      selected_param = util.wrap( selected_param + z, 1, P.get_count() )
+    end
   elseif n==3 then -- set param
-    P.delta(selected_param, z, alt_param)
+    if selected_param > 0 then
+      P.delta(selected_param, z, alt_param)
+    end
   end
   redraw()
 end
