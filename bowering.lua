@@ -52,8 +52,8 @@ end
 
 
 function key(n,z)
-  if n==1 and z==1 then
-    if selected_script > 0 then
+  if selected_script > 0 then -- keys are *only* active if a script is selected
+    if n==1 and z==1 then
       console = "" -- clear console
       if is_freeze and selected_script == current_script then
         P.freezescript(scripts[selected_script])
@@ -63,13 +63,13 @@ function key(n,z)
       current_script = selected_script
       redraw()
     end
+    if n==2 then
+      is_freeze = (z==1) and true or false
+      redraw()
+    end
+    if n==3 then alt_param = (z==1) and true or false end
+    if is_freeze and alt_param and z==1 then crow.public.view.all() end
   end
-  if n==2 then
-    is_freeze = (z==1) and true or false
-    redraw()
-  end
-  if n==3 then alt_param = (z==1) and true or false end
-  if is_freeze and alt_param and z==1 then crow.public.view.all() end
 end
 
 
@@ -77,12 +77,11 @@ function enc(n,z)
   if n==1 then -- select script
     selected_script = util.clamp(selected_script + z, 1, script_count)
     -- show_description = true
-  elseif n==2 then -- select param
-    if selected_script > 0 then
+  end
+  if selected_script > 0 then -- keys 2+3 only active when a script is selected
+    if n==2 then -- select param
       selected_param = util.wrap( selected_param + z, 1, P.get_count() )
-    end
-  elseif n==3 then -- set param
-    if selected_param > 0 then
+    elseif n==3 then -- set param
       P.delta(selected_param, z, alt_param)
     end
   end
